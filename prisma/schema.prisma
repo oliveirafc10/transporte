@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id        String @id @default(cuid())
+  googleId  String @unique
+  name      String
+  login     String
+  avatarUrl String
+}
+
+model trips {
+  id         String @id @default(cuid())
+  nota       String
+  peso       String
+  origem     String
+  destino    String
+  caminhao   String
+  valor      Int
+  observacao String
+
+  createdAt DateTime @default(now())
+}
+
+model fuel {
+  id       String  @id @default(cuid())
+  km       Int
+  litros   Decimal
+  valor    Decimal
+  local    String
+  caminhao String
+
+  createdAt DateTime @default(now())
+}
