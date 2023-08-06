@@ -7,7 +7,7 @@ export async function tripsRoutes(app: FastifyInstance) {
   app.get('/trips', async () => { 
     const trips = await prisma.trips.findMany({
       orderBy: {
-        createdAt: 'asc'
+        createdAt: 'desc'
       },
     })
     return trips.map(trip =>{
