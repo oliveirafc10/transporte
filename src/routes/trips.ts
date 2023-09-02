@@ -2,14 +2,19 @@ import { FastifyInstance } from "fastify";
 import { z } from 'zod';
 import { prisma } from "../lib/prisma";
 
+
 export async function tripsRoutes(app: FastifyInstance) {
 
   app.get('/trips', async () => { 
     const trips = await prisma.trips.findMany({
-      orderBy: {
-        createdAt: 'desc'
-      },
+          orderBy: {
+            createdAt: 'desc'        
+          },
+          
+
+      
     })
+    
     return trips.map(trip =>{
        return {
         id: trip.id,
@@ -22,7 +27,9 @@ export async function tripsRoutes(app: FastifyInstance) {
         observacao: trip.observacao.substring(0, 85).concat('...'),      
         createdAt: trip.createdAt,
       }
+      
     })
+    
   })
 
   app.get('/trips/:id', async (request, reply) => {
@@ -41,7 +48,7 @@ export async function tripsRoutes(app: FastifyInstance) {
   })
 
   app.post('/trips', async (request) => {    
-    console.log(request.body, 'zodi')
+    
     const bodySchema = z.object({
       nota: z.string(),
       peso: z.string(),
@@ -51,9 +58,9 @@ export async function tripsRoutes(app: FastifyInstance) {
       valor: z.coerce.number(),
       observacao: z.string(),      
     })
-    console.log(request.body, 'zodi-ok')
+    
     const { nota, peso, origem, destino, caminhao, valor, observacao } = bodySchema.parse(request.body)
-    console.log(request.body, 'cadastro')
+    
     const trip = await prisma.trips.create({
       
       data: {
@@ -70,25 +77,27 @@ export async function tripsRoutes(app: FastifyInstance) {
     return trip    
   })
 
-  app.put('/trips:id', async (request, reply) => {
+  app.put('/trips/:id', async (request, reply) => {
+    
   const paramsSchema = z.object({
     id: z.string().cuid(),
-  })
+    })
+    console.log(paramsSchema)
+    
   const { id } = paramsSchema.parse(request.params)
-
+  console.log(id)
   const bodySchema = z.object({
+    createdAt: z.coerce.date(),
     nota: z.string(),
     peso: z.string(),
     origem: z.string(),
     destino: z.string(),
     caminhao: z.string(),
-    valor: z.number(),
+    valor: z.coerce.number(),
     observacao: z.string(),
-    
-    isPublic: z.coerce.boolean().default(false),
   })
 
-  const { nota, peso, origem, destino, caminhao, valor, observacao, isPublic } = bodySchema.parse(request.body)
+  const { createdAt, nota, peso, origem, destino, caminhao, valor, observacao } = bodySchema.parse(request.body)
   let trip = await prisma.trips.findFirstOrThrow({
     where: {
     id,
@@ -100,6 +109,7 @@ export async function tripsRoutes(app: FastifyInstance) {
       id
     },
     data: {
+      createdAt,
       nota,
       peso,
       origem,
@@ -113,19 +123,19 @@ export async function tripsRoutes(app: FastifyInstance) {
     return trip
   })
 
-  app.delete('/memories:id', async (request, reply) => {
+  app.delete('/trips/:id', async (request, reply) => {
     const paramsSchema = z.object({
       id: z.string().cuid(),
     })
     const { id } = paramsSchema.parse(request.params)
-
+    
     const trip = await prisma.trips.findFirstOrThrow({
       where: {
       id,
       }
     })
 
-
+      console.log(id)
     await prisma.trips.delete({
       where: {
         id,

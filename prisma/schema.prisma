@@ -38,3 +38,28 @@ model fuel {
 
   createdAt DateTime @default(now())
 }
+
+model manutencao {
+  id            Int      @id @default(autoincrement())
+  km            Int
+  veiculoId     Int
+  tipoServico   String
+  observacao    String
+  realizado     Boolean  @default(false)
+  local         String
+  dataRealizado DateTime
+
+  createdAt DateTime @default(now())
+
+  veiculo veiculo @relation(fields: [veiculoId], references: [id])
+}
+
+model veiculo {
+  id     Int    @id @default(autoincrement())
+  nome   String @unique
+  marca  String
+  modelo String
+
+  createdAt   DateTime     @default(now())
+  manutencoes manutencao[]
+}

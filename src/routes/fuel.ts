@@ -7,13 +7,14 @@ export async function fuelRoutes(app: FastifyInstance) {
   app.get('/fuel', async () => { 
     const fuel = await prisma.fuel.findMany({
       orderBy: {
-        createdAt: 'asc'
+        createdAt: 'desc'
       },
     })
     return fuel.map(fuel =>{
        return {
         id: fuel.id,
         km: fuel.km,
+        litros: fuel.litros,
         valor: fuel.valor,
         local: fuel.local,
         caminhao: fuel.caminhao,
