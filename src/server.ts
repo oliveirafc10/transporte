@@ -9,6 +9,7 @@ import { resolve } from 'node:path';
 import { authRoutes } from './routes/auth';
 import { tripsRoutes } from "./routes/trips";
 import { fuelRoutes } from "./routes/fuel";
+import { carRoutes } from "./routes/car";
 import { uploadRoutes } from './routes/upload';
 const app = fastify();
 
@@ -30,6 +31,7 @@ app.register(jwt, {
 app.register(authRoutes)
 app.register(tripsRoutes)
 app.register(fuelRoutes)
+app.register(carRoutes)
 app.register(uploadRoutes)
 
 app.listen({

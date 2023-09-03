@@ -51,10 +51,10 @@ model manutencao {
 
   createdAt DateTime @default(now())
 
-  veiculo veiculo @relation(fields: [veiculoId], references: [id])
+  veiculo car @relation(fields: [veiculoId], references: [id])
 }
 
-model veiculo {
+model car {
   id     Int    @id @default(autoincrement())
   nome   String @unique
   marca  String
